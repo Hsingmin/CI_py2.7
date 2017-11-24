@@ -136,18 +136,20 @@ def geneticoptimize(domain, costf, popsize = 50, step = 1, mutprob = 0.2, elite 
 			return vec[0:i] + [vec[i]-step] + vec[i+1:]
 		elif vec[i] < domain[i][1]:
 			return vec[0:i] + [vec[i]+step] + vec[i+1:]
+		else: # complete condition judge 
+			return vec
 
 	def crossover(r1, r2):
 		i = random.randint(1, len(domain)-2)
 		return r1[0:i] + r2[i:]
 
 	pop = []
-	for i in range(popsize):
+	for k in range(popsize):
 		vec = [random.randint(domain[i][0], domain[i][1]) for i in range(len(domain))]
 		pop.append(vec)
-
+	#print '--- debug geneticoptimize --- pop = ', pop
 	topelite = int(elite * popsize)
-
+	# print '--- debug geneticoptimize --- topelite = ', topelite
 	for i in range(maxiter):
 		scores = [(costf(v), v) for v in pop]
 		scores.sort()
@@ -158,12 +160,16 @@ def geneticoptimize(domain, costf, popsize = 50, step = 1, mutprob = 0.2, elite 
 		while len(pop) < popsize:
 			if random.random() < mutprob:
 				c = random.randint(0, topelite)
-				pop.append(mutate(ranked[c]))
+
+				#print '--- debug geneticoptimize %d  --- ranked[c] = ' % i, ranked[c]
+				pop.append(mutate(ranked[c])) # Woops, I get a bug here
+				# print '--- debug geneticoptimize %d  --- pop = ' % i, pop
 			else:
 				c1 = random.randint(0, topelite)
 				c2 = random.randint(0, topelite)
 				pop.append(crossover(ranked[c1], ranked[c2]))
-		
+			
+		# print '--- debug geneticoptimize %d  --- pop = ' % i, pop
 		print(scores[0][0])
 
 	return scores[0][1]
