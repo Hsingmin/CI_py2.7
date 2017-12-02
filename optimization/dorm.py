@@ -40,8 +40,6 @@ def dormcost(vec):
 	slots = [0,0,1,1,2,2,3,3,4,4]
 
 	# print '--- debug --- dormcost : vec = ', vec
-	if vec == None:
-		return 0
 
 	for i in range(len(vec)):
 		x = int(vec[i])
